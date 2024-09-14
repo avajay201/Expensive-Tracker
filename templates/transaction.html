@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-top: 0;
+    }
+    .transaction-details {
+        margin-top: 20px;
+    }
+    .detail {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        gap: 50px;
+    }
+    .label {
+        font-weight: bold;
+        color: #555;
+    }
+    .value {
+        color: #333;
+    }
+    #updateTimeBtn {
+        display: block;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        text-decoration: none;
+        text-align: center;
+    }
+    #updateTimeBtn:hover {
+        background-color: #45a049;
+    }
+    a img {
+        width: 30px;
+        height: 30px;
+    }
+    #description {
+        text-align: justify;
+    }
+    @media (max-width: 550px) {
+        span {
+            font-size: 14px;
+        }
+    }
+{% endblock %}
+{% block body %}
+    <div class="container">
+        {% if transaction %}
+            <h2>Transaction Details</h2>
+            <div class="transaction-details">
+                <div class="detail">
+                    <span class="label">Amount:</span>
+                    <span class="value">Rs.{{transaction.amount}}</span>
+                </div>
+                <div class="detail">
+                    <span class="label">Description:</span>
+                    <span class="value" id="description">Purchase at XYZ Store Purchase at XYZ Store Purchase at XYZ StorePurchase at XYZ Store</span>
+                </div>
+                <div class="detail">
+                    <span class="label">Transaction Time:</span>
+                    <span class="value">{{transaction.transaction_time|date:"d-m-Y h:iA"}}</span>
+                </div>
+                <div class="detail">
+                    <span class="label">Payment Method:</span>
+                    <span class="value">{{transaction.payment_method}}</span>
+                </div>
+                <div class="detail">
+                    <span class="label">To Account:</span>
+                    <span class="value">{{transaction.to_account}}</span>
+                </div>
+                <div class="detail">
+                    <span class="label">Location:</span>
+                    <a href="https://www.google.com/maps?q={{ transaction.location }}" target="_blank">
+                        <img src="{% static 'images/locate.png' %}" alt="Location">
+                    </a>
+                </div>
+            </div>
+            <a href="/" id="updateTimeBtn">Back to Home</a>
+        {% else %}
+            <div style="text-align: center; font-weight: bold;">No Transaction</div>
+        {% endif %}
+    </div>
+{% endblock %}

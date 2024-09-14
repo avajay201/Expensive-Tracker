@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: #008000bf;
+        color: white;
+    }
+
+    .header a.opt-btn {
+        display: inline-block;
+        background: #28a745;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-size: 16px;
+    }
+
+    .header a img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .transactions {
+        padding: 20px;
+    }
+
+    .transactions h2 {
+        text-align: center;
+        margin-top: 0;
+        color: #333;
+    }
+
+    .table-container {
+        width: 100%;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th, td {
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    table th {
+        background-color: #6dcd0e;
+        color: white;
+    }
+
+    table td {
+        background-color: #f9f9f9;
+    }
+
+    .no-transactions {
+        text-align: center;
+        padding: 20px;
+        color: #888;
+    }
+
+    .paginator {
+        display: flex;
+        justify-content: center;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        padding: 0;
+        background-color: white;
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .pagination li {
+        border-right: 1px solid #e0e0e0;
+    }
+
+    .pagination li:last-child {
+        border-right: none;
+    }
+
+    .pagination a {
+        color: #333;
+        padding: 8px 16px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s;
+    }
+
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    .pagination a.active {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .pagination a.disabled {
+        color: #999;
+        pointer-events: none;
+    }
+
+    .p-none {
+        pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header a.opt-btn {
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 550px) {
+        .header a.opt-btn {
+            font-size: 14px;
+            padding: 8px;
+        }
+
+        table th, td {
+            font-size: 12px;
+            padding: 8px;
+        }
+
+        table td {
+            white-space: nowrap;
+        }
+    }
+{% endblock %}
+{% block body %}
+    <div class="main-home">
+        <div class="header">
+            <a class="opt-btn" href="/add-payment-method">Add Payment Method</a>
+            <a class="opt-btn" href="/add-transaction">Add a Transaction</a>
+            <a href="/logout">
+                <img src="{% static 'images/log-out.png' %}" alt="Logout">
+            </a>
+        </div>
+
+        <div class="transactions">
+            <h2>Transactions</h2>
+            <div class="table-container">
+                {% if transactions %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sno.</th>
+                                <th>Amount</th>
+                                <th>Time</th>
+                                <th>More Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                                <tr>
+                                    <td>{{ forloop.counter0|add:sno_start }}</td>
+                                    <td>Rs.{{ transaction.amount }}</td>
+                                    <td>{{ transaction.transaction_time }}</td>
+                                    <td>
+                                        <a href="/transaction/{{transaction.id}}">More</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="paginator">
+                        <ul class="pagination" id="pagination">
+                            {% if prev_page %}
+                                <li><a href="/?page={{prev_page}}"  >Prev</a></li>
+                            {% endif %}
+                            {% for page in pages %}
+                                <li><a class="{% if current_page == page %}active p-none {% endif %}" href="{% if current_page == page %}#{% else %}/?page={{page}}{% endif %}">{{page}}</a></li>
+                            {% endfor %}
+                            {% if next_page %}
+                                <li><a href="/?page={{next_page}}" >Next</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="no-transactions">No transactions</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
